@@ -1,0 +1,63 @@
+public class Person {
+    // 属性：姓名
+    private String name;
+    
+    // 属性：年龄
+    private int age;
+
+    // 构造方法：用于创建Person对象时初始化属性
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    // Getter方法：获取姓名
+    public String getName() {
+        return name;
+    }
+
+    // Setter方法：设置姓名
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // Getter方法：获取年龄
+    public int getAge() {
+        return age;
+    }
+
+    // Setter方法：设置年龄
+    public void setAge(int age) {
+        if (age > 0) { // 确保年龄是正数
+            this.age = age;
+        } else {
+            System.out.println("年龄必须是正数！");
+        }
+    }
+
+    // 方法：显示Person的信息
+    public void displayInfo() {
+        System.out.println("姓名: " + name + ", 年龄: " + age);
+    }
+
+    public static void main(String[] args) {
+        // 创建Person对象
+        Person person = new Person("张三", 25);
+
+        // 显示Person的信息
+        person.displayInfo();
+
+        // 修改Person的姓名和年龄
+        person.setName("李四");
+        person.setAge(30);
+
+        // 再次显示Person的信息
+        person.displayInfo();
+
+        // 尝试设置一个非法的年龄（负数）
+        person.setAge(-5);
+
+        // 再次显示Person的信息，注意年龄应该没有变化
+        person.displayInfo();
+    }
+}

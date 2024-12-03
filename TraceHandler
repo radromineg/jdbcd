@@ -1,0 +1,87 @@
+import logging
+import functools
+from datetime import datetime
+from typing import Callable, Any, Dict, List
+ 
+# 自定义日志级别
+CUSTOM_LEVELS = {
+    'TRACE': 5,
+    'AUDIT': 15,
+}
+logging.addLevelName(CUSTOM_LEVELS['TRACE'], 'TRACE')
+logging.addLevelName(CUSTOM_LEVELS['AUDIT'], 'AUDIT')
+ 
+# 自定义日志处理器基类
+class CustomLogHandler(logging.Handler):
+    def __init__(self, level: int):
+        super().__init__(level)
+ 
+    def emit(self, record: logging.LogRecord) -> None:
+        # 在这里实现日志的自定义处理逻辑
+        # 例如，将日志写入文件、数据库或发送到远程服务器
+        pass
+ 
+# 示例：自定义的TRACE级别日志处理器，将日志打印到控制台
+class TraceHandler(CustomLogHandler):
+    def emit(self, record: logging.LogRecord) -> None:
+        print(f"[TRACE] {record.getMessage()}")
+ 
+# 示例：自定义的AUDIT级别日志处理器，将日志存储到字典中（仅用于演示）
+class AuditLogHandler(CustomLogHandler):
+    def __init__(self, log_dict: Dict[str, List[str]]):
+        super().__init__(CUSTOM_LEVELS['AUDIT'])
+        self.log_dict = log_dict
+ 
+    def emit(self, record: logging.LogRecord) -> None:
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        log_entry = f"{timestamp} - {record.getMessage()}"
+        if record.name not in self.log_dict:
+            self.log_dict[record.name] = []
+        self.log_dict[record.name].append(log_entry)
+ 
+# 日志记录装饰器
+def log_decorator(level: int) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+        @functools.wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            logger = logging.getLogger(func.__module__)
+            if not logger.hasHandlers():
+                # 如果没有为模块配置处理器，则添加一个默认的处理器（例如，控制台处理器）
+                console_handler = logging.StreamHandler()
+                console_handler.setLevel(logging.DEBUG)  # 或其他适当的级别
+                formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+                console_handler.setFormatter(formatter)
+                logger.addHandler(console_handler)
+ 
+            # 记录日志
+            logger.log(level, f"Executing {func.__name__} with args={args} and kwargs={kwargs}")
+            result = func(*args, **kwargs)
+            logger.log(level, f"{func.__name__} returned {result}")
+            return result
+        return wrapper
+    return decorator
+ 
+# 示例函数，使用日志记录装饰器
+@log_decorator(logging.INFO)
+def example_function(x: int, y: int) -> int:
+    return x + y
+ 
+# 配置自定义日志处理器
+audit_log_dict: Dict[str, List[str]] = {}
+audit_handler = AuditLogHandler(audit_log_dict)
+logging.getLogger('').addHandler(audit_handler)  # 为根记录器添加处理器（将影响所有未明确配置的记录器）
+ 
+# 测试日志记录和装饰器
+if __name__ == "__main__":
+    # 设置日志级别以包含自定义级别
+    logging.basicConfig(level=CUSTOM_LEVELS['AUDIT'])
+ 
+    # 执行示例函数
+    result = example_function(3, 4)
+    print(f"Result of example_function: {result}")
+ 
+    # 打印审计日志
+    for logger_name, logs in audit_log_dict.items():
+        print(f"Audit logs for {logger_name}:")
+        for log in logs:
+            print(log)

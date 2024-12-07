@@ -1,0 +1,18 @@
+protocol Container {
+    associatedtype Item
+    var count: Int { get }
+    mutating func append(_ item: Item)
+}
+
+struct Stack<Element>: Container {
+    var items = [Element]()
+    var count: Int { return items.count }
+    
+    mutating func append(_ item: Element) {
+        items.append(item)
+    }
+}
+
+var intStack = Stack<Int>()
+intStack.append(1)
+print(intStack.count)  // Output: 1

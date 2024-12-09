@@ -1,0 +1,40 @@
+package main
+
+import (
+    "fmt"
+    "io/ioutil"
+    "net/http"
+    "sync"
+)
+
+func fetchURL(url string, wg *sync.WaitGroup) {
+    defer wg.Done()
+
+    response, err := http.Get(url)
+    if err != nil {
+        fmt.Println("Error:", err)
+        return
+    }
+    defer response.Body.Close()
+
+    body, _ := ioutil.ReadAll(response.Body)
+    fmt.Printf("URL: %s\n", url)
+    fmt.Printf("Content: %s\n\n", string(body[:100])) // Print first 100 characters
+}
+
+func main() {
+    urls := []string{
+        "https://example.com",
+        "https://httpbin.org/get",
+        "https://jsonplaceholder.typicode.com/posts/1",
+    }
+
+    var wg sync.WaitGroup
+
+    for _, url := range urls {
+        wg.Add(1)
+        go fetchURL(url, &wg)
+    }
+
+    wg.Wait()
+}

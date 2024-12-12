@@ -1,0 +1,27 @@
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+data = {"items": []}
+
+@app.route('/items', methods=['GET'])
+def get_items():
+    return jsonify(data)
+
+@app.route('/items', methods=['POST'])
+def add_item():
+    item = request.json.get('item')
+    if item:
+        data['items'].append(item)
+        return jsonify({"message": "Item added."}), 201
+    return jsonify({"message": "Bad request."}), 400
+
+@app.route('/items/<int:index>', methods=['DELETE'])
+def delete_item(index):
+    if 0 <= index < len(data['items']):
+        data['items'].pop(index)
+        return jsonify({"message": "Item deleted."})
+    return jsonify({"message": "Index out of range."}), 404
+
+if __name__ == '__main__':
+    app.run(debug=True)

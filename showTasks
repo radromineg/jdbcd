@@ -1,0 +1,34 @@
+let tasks = [];
+
+function addTask(task) {
+    tasks.push(task);
+    console.log(`Task "${task}" added.`);
+}
+
+function removeTask(task) {
+    const index = tasks.indexOf(task);
+    if (index > -1) {
+        tasks.splice(index, 1);
+        console.log(`Task "${task}" removed.`);
+    } else {
+        console.log(`Task "${task}" not found.`);
+    }
+}
+
+function showTasks() {
+    if (tasks.length === 0) {
+        console.log("No tasks available.");
+    } else {
+        console.log("Tasks:");
+        tasks.forEach((task, index) => {
+            console.log(`${index + 1}. ${task}`);
+        });
+    }
+}
+
+// Example usage
+addTask("Buy groceries");
+addTask("Clean the house");
+showTasks();
+removeTask("Clean the house");
+showTasks();

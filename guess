@@ -1,0 +1,19 @@
+target = rand(1..100)
+guess = nil
+attempts = 0
+
+puts "Welcome to 'Guess the Number'! I'm thinking of a number between 1 and 100."
+
+until guess == target
+  print "Enter your guess: "
+  guess = gets.to_i
+  attempts += 1
+
+  if guess < target
+    puts "Too low!"
+  elsif guess > target
+    puts "Too high!"
+  else
+    puts "Congratulations! You guessed the number in #{attempts} attempts."
+  end
+end

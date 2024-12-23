@@ -1,0 +1,18 @@
+let secretNumber = Math.floor(Math.random() * 100) + 1;
+let attempts = 0;
+
+function guessNumber(userGuess) {
+    attempts++;
+    if (userGuess == secretNumber) {
+        console.log(`Congratulations! You guessed the number in ${attempts} attempts.`);
+    } else if (userGuess > secretNumber) {
+        console.log("Too high! Try again.");
+    } else {
+        console.log("Too low! Try again.");
+    }
+}
+
+// Example guesses
+guessNumber(50);
+guessNumber(75);
+guessNumber(secretNumber);

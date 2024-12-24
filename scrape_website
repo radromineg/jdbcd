@@ -1,0 +1,31 @@
+import threading
+import requests
+from bs4 import BeautifulSoup
+
+# 爬虫函数
+def scrape_website(url):
+    try:
+        response = requests.get(url)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        title = soup.title.string if soup.title else 'No Title'
+        print(f"URL: {url}, Title: {title}")
+    except Exception as e:
+        print(f"Failed to scrape {url}: {e}")
+
+# 多线程爬取多个网站
+urls = [
+    'https://www.python.org',
+    'https://www.github.com',
+    'https://www.stackoverflow.com',
+]
+
+threads = []
+for url in urls:
+    thread = threading.Thread(target=scrape_website, args=(url,))
+    threads.append(thread)
+    thread.start()
+
+for thread in threads:
+    thread.join()
+
+print("Scraping completed.")

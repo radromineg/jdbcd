@@ -1,0 +1,8 @@
+#!/bin/bash
+
+while true; do
+    echo "System Monitoring..."
+    echo "CPU Load: $(uptime)"
+    echo "Memory Usage: $(free -h | grep Mem | awk '{print $3}')"
+    sleep 5
+done

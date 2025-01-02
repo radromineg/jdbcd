@@ -1,0 +1,13 @@
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+
+texts = ["AI is great", "I love programming", "Python is fun"]
+labels = [1, 0, 1]
+
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(texts)
+
+model = MultinomialNB()
+model.fit(X, labels)
+
+print(model.predict(vectorizer.transform(["AI programming"])))

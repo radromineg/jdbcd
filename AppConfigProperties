@@ -1,0 +1,10 @@
+@Component
+public class AppConfigProperties {
+    @Value("${app.name}")
+    private String appName;
+
+    @PostConstruct
+    public void printAppName() {
+        System.out.println("App Name: " + appName);
+    }
+}

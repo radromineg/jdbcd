@@ -1,0 +1,9 @@
+def forest_path():
+    print("You continue deeper into the forest and hear strange noises.")
+    print("1. Investigate the noises.")
+    print("2. Ignore them and move on.")
+    choice = input("Enter 1 or 2: ")
+    if choice == '1':
+        print("You discover a group of friendly forest spirits!")
+    else:
+        print("You narrowly avoid a hidden trap.")

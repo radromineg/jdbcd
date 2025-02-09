@@ -1,0 +1,52 @@
+package main
+
+import (
+    "encoding/json"
+    "log"
+    "net/http"
+    "strconv"
+)
+
+type Response struct {
+    Message string `json:"message"`
+    Value   int    `json:"value,omitempty"`
+}
+
+func helloHandler(w http.ResponseWriter, r *http.Request) {
+    name := r.URL.Query().Get("name")
+    if name == "" {
+        name = "World"
+    }
+    response := Response{
+        Message: "Hello, " + name + "!",
+    }
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
+}
+
+func sumHandler(w http.ResponseWriter, r *http.Request) {
+    aStr := r.URL.Query().Get("a")
+    bStr := r.URL.Query().Get("b")
+    
+    a, err1 := strconv.Atoi(aStr)
+    b, err2 := strconv.Atoi(bStr)
+    
+    if err1 != nil || err2 != nil {
+        http.Error(w, "参数错误，请提供有效的整数参数 a 和 b", http.StatusBadRequest)
+        return
+    }
+    
+    response := Response{
+        Message: "Sum computed",
+        Value:   a + b,
+    }
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
+}
+
+func main() {
+    http.HandleFunc("/hello", helloHandler);
+    http.HandleFunc("/sum", sumHandler);
+    log.Println("服务器启动在 http://localhost:8080")
+    log.Fatal(http.ListenAndServe(":8080", nil))
+}

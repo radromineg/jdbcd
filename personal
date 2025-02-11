@@ -1,0 +1,10 @@
+const message = "Hello, Web3!";
+const account = '0xYourAccountAddress';
+
+web3.eth.personal.sign(message, account, 'your_password')
+  .then(signature => {
+    console.log('消息签名:', signature);
+  })
+  .catch(error => {
+    console.error('消息签名失败:', error);
+  });

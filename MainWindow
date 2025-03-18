@@ -1,0 +1,23 @@
+using System;
+using System.Threading;
+using System.Windows;
+using System.Windows.Threading;
+
+public partial class MainWindow : Window
+{
+    public MainWindow()
+    {
+        InitializeComponent();
+        Thread backgroundThread = new Thread(UpdateLabel);
+        backgroundThread.Start();
+    }
+
+    private void UpdateLabel()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            Thread.Sleep(1000);
+            Dispatcher.Invoke(() => MyLabel.Content = $"Update {i}");
+        }
+    }
+}

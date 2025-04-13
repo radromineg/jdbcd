@@ -1,0 +1,9 @@
+type Response<T> = T extends string ? { kind: 'text'; content: T }
+                  : T extends number ? { kind: 'number'; value: T }
+                  : { kind: 'unknown'; raw: T };
+
+function handle<T>(input: T): Response<T> {
+    if (typeof input === 'string') return { kind: 'text', content: input } as Response<T>;
+    if (typeof input === 'number') return { kind: 'number', value: input } as Response<T>;
+    return { kind: 'unknown', raw: input } as Response<T>;
+}
